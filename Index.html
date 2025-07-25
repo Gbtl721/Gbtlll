@@ -2,36 +2,39 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <title>Calculator Apartament - Fără Împrumut</title>
+  <title>Calculator Apartament</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f4f6f8;
+      background: #f4f6f8;
       padding: 40px;
       color: #333;
     }
-
     .container {
       max-width: 700px;
-      margin: 0 auto;
+      margin: auto;
       background: white;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
-
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo-container img {
+      max-height: 80px;
+    }
     h2 {
       text-align: center;
       margin-bottom: 30px;
       color: #2c3e50;
     }
-
     label {
       font-weight: 600;
     }
-
     input[type="number"] {
       width: 100%;
       padding: 10px;
@@ -40,11 +43,10 @@
       border: 1px solid #ccc;
       font-size: 16px;
     }
-
     button {
       display: inline-block;
       padding: 10px 20px;
-      background-color: #007acc;
+      background: #007acc;
       color: white;
       font-size: 16px;
       border: none;
@@ -53,15 +55,13 @@
       margin-top: 10px;
       margin-right: 10px;
     }
-
     button:hover {
-      background-color: #005fa3;
+      background: #005fa3;
     }
-
     .result {
       margin-top: 30px;
       padding: 20px;
-      background-color: #f9f9f9;
+      background: #f9f9f9;
       border-left: 6px solid #007acc;
       border-radius: 6px;
       font-size: 16px;
@@ -70,6 +70,13 @@
 </head>
 <body>
   <div class="container">
+
+    <!-- LOGO OFICIAL -->
+    <div class="logo-container">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1uIbSuyHpv0zM3e3Baap6X_vDU9dGRLnCNg&s"
+           alt="Grand Beetle Residence Logo">
+    </div>
+
     <h2>Calculator Preț Apartament</h2>
 
     <label for="mp_util">Suprafață utilă (mp):</label>
@@ -87,9 +94,7 @@
     <button onclick="calculeaza()">Calculează</button>
     <button onclick="exportaPDF()">Exportă ca PDF</button>
 
-    <div class="result" id="rezumat">
-      <!-- Rezumatul apare aici -->
-    </div>
+    <div class="result" id="rezumat"></div>
   </div>
 
   <script>
@@ -100,7 +105,6 @@
       const tvaProcent = parseFloat(document.getElementById("tva").value) / 100;
 
       const pretBalcon = pretUtil / 2;
-
       const totalFaraTVA = (mpUtil * pretUtil) + (mpBalcon * pretBalcon);
       const totalTVA = totalFaraTVA * tvaProcent;
       const totalCuTVA = totalFaraTVA + totalTVA;
@@ -113,14 +117,12 @@
           <li><strong>Suprafață balcon:</strong> ${mpBalcon} mp</li>
           <li><strong>Preț/mp balcon:</strong> €${Math.round(pretBalcon).toLocaleString('ro-RO')} (calculat automat)</li>
           <li><strong>TVA:</strong> ${(tvaProcent * 100).toFixed(0)}%</li>
-        </ul>
-        <hr>
+        </ul><hr>
         <ul>
           <li><strong>Preț total fără TVA:</strong> €${Math.round(totalFaraTVA).toLocaleString('ro-RO')}</li>
           <li><strong>TVA total:</strong> €${Math.round(totalTVA).toLocaleString('ro-RO')}</li>
           <li><strong>Preț total cu TVA:</strong> €${Math.round(totalCuTVA).toLocaleString('ro-RO')}</li>
-        </ul>
-      `;
+        </ul>`;
     }
 
     function exportaPDF() {
@@ -129,16 +131,13 @@
         alert("Te rog să efectuezi calculul mai întâi!");
         return;
       }
-
-      const opt = {
-        margin:       0.5,
-        filename:     'rezumat-apartament.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().from(element).set(opt).save();
+      html2pdf().from(element).set({
+        margin: 0.5,
+        filename: 'rezumat-apartament.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      }).save();
     }
   </script>
 </body>
