@@ -2,177 +2,149 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <title>Calculator Apartament</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <title>Calculator Apartamente Grand Beetle Residence</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f4f6f8;
-      padding: 40px;
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: #f9f9f9;
       color: #333;
     }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    }
-    .logo-container {
-      text-align: center;
+    img.logo {
+      max-width: 200px;
       margin-bottom: 20px;
     }
-    .logo-container img {
-      max-height: 80px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #2c3e50;
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
     }
     label {
-      font-weight: 600;
-      display: block;
-      margin-top: 15px;
+      font-weight: bold;
     }
-    input[type="number"] {
+    input, select, button {
+      padding: 8px;
+      margin: 8px 0;
       width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    .tva-buttons button {
-      padding: 8px 16px;
-      margin: 10px 10px 20px 0;
-      font-size: 16px;
-      border: 2px solid #007acc;
-      background: white;
-      color: #007acc;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-    }
-    .tva-buttons button.active {
-      background: #007acc;
-      color: white;
-    }
-    button {
-      display: inline-block;
-      padding: 10px 20px;
-      background: #007acc;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-      margin-right: 10px;
-    }
-    button:hover {
-      background: #005fa3;
+      max-width: 300px;
+      display: block;
     }
     .result {
-      margin-top: 30px;
-      padding: 20px;
-      background: #f9f9f9;
-      border-left: 6px solid #007acc;
-      border-radius: 6px;
-      font-size: 16px;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .tva-buttons {
+      margin: 10px 0;
+    }
+    .tva-buttons button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="container">
 
-    <!-- LOGO -->
-    <div class="logo-container">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1uIbSuyHpv0zM3e3Baap6X_vDU9dGRLnCNg&s"
-           alt="Grand Beetle Residence Logo">
-    </div>
+  <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1uIbSuyHpv0zM3e3Baap6X_vDU9dGRLnCNg&s" alt="Grand Beetle Residence">
 
-    <h2>Calculator Preț Apartament</h2>
+  <h1>Calculator preț apartament</h1>
 
-    <label for="mp_util">Suprafață utilă (mp):</label>
-    <input type="number" id="mp_util" value="57.62" step="0.01">
+  <label for="tip-apartament">Tip apartament:</label>
+  <select id="tip-apartament" onchange="selectApartmentType()">
+    <option value="">— Selectează —</option>
+    ${[...Array(20).keys()].map(i => `<option value="${i+1}">Tip ${i+1}</option>`).join('')}
+  </select>
 
-    <label for="pret_util">Preț/mp util fără TVA (€):</label>
-    <input type="number" id="pret_util" value="1700" step="1">
+  <label for="suprafataUtila">Suprafață utilă (m²):</label>
+  <input type="number" id="suprafataUtila" onchange="calculeazaPret()" />
 
-    <label for="mp_balcon">Suprafață balcon (mp):</label>
-    <input type="number" id="mp_balcon" value="14.33" step="0.01">
+  <label for="balcon">Balcon (m²):</label>
+  <input type="number" id="balcon" onchange="calculeazaPret()" />
 
-    <label>TVA (%)</label>
-    <div class="tva-buttons">
-      <button onclick="selecteazaTVA(9)" id="btn9">9%</button>
-      <button onclick="selecteazaTVA(21)" id="btn21">21%</button>
-    </div>
+  <label for="pretMp2">Preț pe m² (fără TVA):</label>
+  <input type="number" id="pretMp2" value="1200" onchange="calculeazaPret()" />
 
-    <button onclick="calculeaza()">Calculează</button>
-    <button onclick="exportaPDF()">Exportă ca PDF</button>
-
-    <div class="result" id="rezumat"></div>
+  <div class="tva-buttons">
+    <label>TVA:</label>
+    <button onclick="setTVA(0.09)">9%</button>
+    <button onclick="setTVA(0.21)">21%</button>
   </div>
 
+  <div class="result" id="pretTotal">Preț total: —</div>
+
+  <button onclick="genereazaPDF()">Exportă ca PDF</button>
+
   <script>
-    let tvaSelectat = 9; // valoare implicită
+    let tva = 0.09;
 
-    function selecteazaTVA(valoare) {
-      tvaSelectat = valoare;
+    const apartamente = {
+      1:  { util: 37.97, balcon: 4.56 },
+      2:  { util: 37.00, balcon: 4.60 },
+      3:  { util: 52.10, balcon: 11.80 },
+      4:  { util: 52.10, balcon: 9.60 },
+      5:  { util: 52.00, balcon: 11.20 },
+      6:  { util: 53.00, balcon: 4.40 },
+      7:  { util: 37.00, balcon: 8.50 },
+      8:  { util: 37.10, balcon: 8.50 },
+      9:  { util: 52.30, balcon: 11.80 },
+      10: { util: 52.30, balcon: 9.60 },
+      11: { util: 72.20, balcon: 11.80 },
+      12: { util: 57.50, balcon: 2.80 },
+      13: { util: 56.10, balcon: 2.80 },
+      14: { util: 59.80, balcon: 5.00 },
+      15: { util: 64.80, balcon: 6.50 },
+      16: { util: 37.50, balcon: 6.30 },
+      17: { util: 40.00, balcon: 6.60 },
+      18: { util: 38.50, balcon: 3.50 },
+      19: { util: 37.30, balcon: 4.20 },
+      20: { util: 57.60, balcon: 14.30 },
+    };
 
-      // evidențiază butonul activ
-      document.getElementById("btn9").classList.remove("active");
-      document.getElementById("btn21").classList.remove("active");
-      document.getElementById("btn" + valoare).classList.add("active");
-    }
-
-    function calculeaza() {
-      const mpUtil = parseFloat(document.getElementById("mp_util").value);
-      const pretUtil = parseFloat(document.getElementById("pret_util").value);
-      const mpBalcon = parseFloat(document.getElementById("mp_balcon").value);
-      const tvaProcent = tvaSelectat / 100;
-
-      const pretBalcon = pretUtil / 2;
-      const totalFaraTVA = (mpUtil * pretUtil) + (mpBalcon * pretBalcon);
-      const totalTVA = totalFaraTVA * tvaProcent;
-      const totalCuTVA = totalFaraTVA + totalTVA;
-
-      document.getElementById("rezumat").innerHTML = `
-        <h3>Rezumat calcul:</h3>
-        <ul>
-          <li><strong>Suprafață utilă:</strong> ${mpUtil} mp</li>
-          <li><strong>Preț/mp util:</strong> €${Math.round(pretUtil).toLocaleString('ro-RO')}</li>
-          <li><strong>Suprafață balcon:</strong> ${mpBalcon} mp</li>
-          <li><strong>Preț/mp balcon:</strong> €${Math.round(pretBalcon).toLocaleString('ro-RO')} (calculat automat)</li>
-          <li><strong>TVA:</strong> ${tvaSelectat}%</li>
-        </ul><hr>
-        <ul>
-          <li><strong>Preț total fără TVA:</strong> €${Math.round(totalFaraTVA).toLocaleString('ro-RO')}</li>
-          <li><strong>TVA total:</strong> €${Math.round(totalTVA).toLocaleString('ro-RO')}</li>
-          <li><strong>Preț total cu TVA:</strong> €${Math.round(totalCuTVA).toLocaleString('ro-RO')}</li>
-        </ul>`;
-    }
-
-    function exportaPDF() {
-      const element = document.getElementById("rezumat");
-      if (!element.innerText.trim()) {
-        alert("Te rog să efectuezi calculul mai întâi!");
-        return;
+    function selectApartmentType() {
+      const tip = document.getElementById("tip-apartament").value;
+      if (tip && apartamente[tip]) {
+        document.getElementById("suprafataUtila").value = apartamente[tip].util;
+        document.getElementById("balcon").value = apartamente[tip].balcon;
+        calculeazaPret();
       }
-      html2pdf().from(element).set({
-        margin: 0.5,
-        filename: 'rezumat-apartament.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      }).save();
     }
 
-    // selectează TVA 9% implicit la încărcare
-    window.onload = () => selecteazaTVA(9);
+    function setTVA(val) {
+      tva = val;
+      calculeazaPret();
+    }
+
+    function calculeazaPret() {
+      const util = parseFloat(document.getElementById("suprafataUtila").value) || 0;
+      const balcon = parseFloat(document.getElementById("balcon").value) || 0;
+      const pretMp2 = parseFloat(document.getElementById("pretMp2").value) || 0;
+
+      const pretFaraTVA = (util * pretMp2) + (balcon * (pretMp2 / 2));
+      const pretCuTVA = pretFaraTVA * (1 + tva);
+
+      document.getElementById("pretTotal").innerText = `Preț total: ${Math.round(pretCuTVA)} €`;
+    }
+
+    function genereazaPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const util = document.getElementById("suprafataUtila").value;
+      const balcon = document.getElementById("balcon").value;
+      const pretMp2 = document.getElementById("pretMp2").value;
+      const total = document.getElementById("pretTotal").innerText;
+
+      doc.setFontSize(14);
+      doc.text("Calculator Preț Apartament", 20, 20);
+      doc.text(`Suprafață utilă: ${util} m²`, 20, 40);
+      doc.text(`Balcon: ${balcon} m²`, 20, 50);
+      doc.text(`Preț pe m² (fără TVA): ${pretMp2} €`, 20, 60);
+      doc.text(`TVA: ${Math.round(tva * 100)}%`, 20, 70);
+      doc.text(total, 20, 90);
+
+      doc.save("calcul_apartament.pdf");
+    }
   </script>
+
 </body>
 </html>
