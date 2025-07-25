@@ -6,43 +6,81 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
-      background: #f9f9f9;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       color: #333;
     }
-    img.logo {
-      max-width: 200px;
-      margin-bottom: 20px;
+
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      width: 120px;
     }
+
     h1 {
       font-size: 24px;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
+      text-align: center;
     }
+
     label {
-      font-weight: bold;
+      font-size: 16px;
+      margin-top: 15px;
       display: block;
+    }
+
+    select, input, button {
+      font-size: 16px;
+      padding: 10px;
+      margin-top: 5px;
+      width: 300px;
+      max-width: 90vw;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .tva-buttons {
+      display: flex;
+      justify-content: center;
       margin-top: 15px;
     }
-    input, select, button {
-      padding: 8px;
-      margin-top: 5px;
-      width: 100%;
-      max-width: 300px;
-      display: block;
+
+    .tva-buttons button {
+      margin: 0 10px;
+      width: 100px;
+      background-color: #eee;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+      cursor: pointer;
     }
+
+    .tva-buttons button:hover {
+      background-color: #ddd;
+    }
+
     .result {
       font-size: 20px;
       font-weight: bold;
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .export-btn {
       margin-top: 20px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
-    .tva-buttons {
-      margin: 10px 0;
-    }
-    .tva-buttons button {
-      padding: 10px 20px;
-      margin-right: 10px;
-      cursor: pointer;
+
+    .export-btn:hover {
+      background-color: #003060;
     }
   </style>
 </head>
@@ -50,52 +88,32 @@
 
   <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1uIbSuyHpv0zM3e3Baap6X_vDU9dGRLnCNg&s" alt="Grand Beetle Residence">
 
-  <h1>Calculator preț apartament (fără împrumut)</h1>
+  <h1>Calculator Preț Apartament</h1>
 
   <label for="tip-apartament">Tip apartament:</label>
   <select id="tip-apartament" onchange="selectApartmentType()">
     <option value="">— Selectează —</option>
     <!-- Tipuri 1–20 -->
-    <option value="1">Tip 1</option>
-    <option value="2">Tip 2</option>
-    <option value="3">Tip 3</option>
-    <option value="4">Tip 4</option>
-    <option value="5">Tip 5</option>
-    <option value="6">Tip 6</option>
-    <option value="7">Tip 7</option>
-    <option value="8">Tip 8</option>
-    <option value="9">Tip 9</option>
-    <option value="10">Tip 10</option>
-    <option value="11">Tip 11</option>
-    <option value="12">Tip 12</option>
-    <option value="13">Tip 13</option>
-    <option value="14">Tip 14</option>
-    <option value="15">Tip 15</option>
-    <option value="16">Tip 16</option>
-    <option value="17">Tip 17</option>
-    <option value="18">Tip 18</option>
-    <option value="19">Tip 19</option>
-    <option value="20">Tip 20</option>
+    ${Array.from({length: 20}, (_, i) => `<option value="${i+1}">Tip ${i+1}</option>`).join('')}
   </select>
 
   <label for="suprafataUtila">Suprafață utilă (m²):</label>
   <input type="number" id="suprafataUtila" onchange="calculeazaPret()">
 
-  <label for="balcon">Suprafață balcon (m²):</label>
+  <label for="balcon">Balcon (m²):</label>
   <input type="number" id="balcon" onchange="calculeazaPret()">
 
   <label for="pretMp2">Preț pe m² (fără TVA):</label>
   <input type="number" id="pretMp2" value="1300" onchange="calculeazaPret()">
 
   <div class="tva-buttons">
-    <label>TVA:</label>
-    <button onclick="setTVA(0.09)">9%</button>
-    <button onclick="setTVA(0.21)">21%</button>
+    <button onclick="setTVA(0.09)">TVA 9%</button>
+    <button onclick="setTVA(0.21)">TVA 21%</button>
   </div>
 
   <div class="result" id="pretTotal">Preț total: —</div>
 
-  <button onclick="genereazaPDF()">Exportă ca PDF</button>
+  <button class="export-btn" onclick="genereazaPDF()">Exportă ca PDF</button>
 
   <script>
     let tva = 0.09;
