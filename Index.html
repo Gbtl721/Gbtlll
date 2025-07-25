@@ -21,10 +21,12 @@
     }
     label {
       font-weight: bold;
+      display: block;
+      margin-top: 15px;
     }
     input, select, button {
       padding: 8px;
-      margin: 8px 0;
+      margin-top: 5px;
       width: 100%;
       max-width: 300px;
       display: block;
@@ -48,22 +50,42 @@
 
   <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1uIbSuyHpv0zM3e3Baap6X_vDU9dGRLnCNg&s" alt="Grand Beetle Residence">
 
-  <h1>Calculator preț apartament</h1>
+  <h1>Calculator preț apartament (fără împrumut)</h1>
 
   <label for="tip-apartament">Tip apartament:</label>
   <select id="tip-apartament" onchange="selectApartmentType()">
     <option value="">— Selectează —</option>
-    ${[...Array(20).keys()].map(i => `<option value="${i+1}">Tip ${i+1}</option>`).join('')}
+    <!-- Tipuri 1–20 -->
+    <option value="1">Tip 1</option>
+    <option value="2">Tip 2</option>
+    <option value="3">Tip 3</option>
+    <option value="4">Tip 4</option>
+    <option value="5">Tip 5</option>
+    <option value="6">Tip 6</option>
+    <option value="7">Tip 7</option>
+    <option value="8">Tip 8</option>
+    <option value="9">Tip 9</option>
+    <option value="10">Tip 10</option>
+    <option value="11">Tip 11</option>
+    <option value="12">Tip 12</option>
+    <option value="13">Tip 13</option>
+    <option value="14">Tip 14</option>
+    <option value="15">Tip 15</option>
+    <option value="16">Tip 16</option>
+    <option value="17">Tip 17</option>
+    <option value="18">Tip 18</option>
+    <option value="19">Tip 19</option>
+    <option value="20">Tip 20</option>
   </select>
 
   <label for="suprafataUtila">Suprafață utilă (m²):</label>
-  <input type="number" id="suprafataUtila" onchange="calculeazaPret()" />
+  <input type="number" id="suprafataUtila" onchange="calculeazaPret()">
 
-  <label for="balcon">Balcon (m²):</label>
-  <input type="number" id="balcon" onchange="calculeazaPret()" />
+  <label for="balcon">Suprafață balcon (m²):</label>
+  <input type="number" id="balcon" onchange="calculeazaPret()">
 
   <label for="pretMp2">Preț pe m² (fără TVA):</label>
-  <input type="number" id="pretMp2" value="1200" onchange="calculeazaPret()" />
+  <input type="number" id="pretMp2" value="1300" onchange="calculeazaPret()">
 
   <div class="tva-buttons">
     <label>TVA:</label>
@@ -98,7 +120,7 @@
       17: { util: 40.00, balcon: 6.60 },
       18: { util: 38.50, balcon: 3.50 },
       19: { util: 37.30, balcon: 4.20 },
-      20: { util: 57.60, balcon: 14.30 },
+      20: { util: 57.60, balcon: 14.30 }
     };
 
     function selectApartmentType() {
@@ -123,7 +145,8 @@
       const pretFaraTVA = (util * pretMp2) + (balcon * (pretMp2 / 2));
       const pretCuTVA = pretFaraTVA * (1 + tva);
 
-      document.getElementById("pretTotal").innerText = `Preț total: ${Math.round(pretCuTVA)} €`;
+      document.getElementById("pretTotal").innerText =
+        `Preț total: ${Math.round(pretCuTVA).toLocaleString("ro-RO")} €`;
     }
 
     function genereazaPDF() {
