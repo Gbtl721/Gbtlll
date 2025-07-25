@@ -104,10 +104,16 @@
     }
 
     .result {
-      margin-top: 25px;
-      font-size: 18px;
-      font-weight: bold;
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: normal;
       text-align: center;
+    }
+
+    .highlight {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -121,7 +127,26 @@
     <label for="tip-apartament">Tip apartament:</label>
     <select id="tip-apartament" onchange="selectApartmentType()">
       <option value="">— Selectează —</option>
-      ${[...Array(20)].map((_, i) => `<option value="${i+1}">Tip ${i+1}</option>`).join('')}
+      <option value="1">Tip 1</option>
+      <option value="2">Tip 2</option>
+      <option value="3">Tip 3</option>
+      <option value="4">Tip 4</option>
+      <option value="5">Tip 5</option>
+      <option value="6">Tip 6</option>
+      <option value="7">Tip 7</option>
+      <option value="8">Tip 8</option>
+      <option value="9">Tip 9</option>
+      <option value="10">Tip 10</option>
+      <option value="11">Tip 11</option>
+      <option value="12">Tip 12</option>
+      <option value="13">Tip 13</option>
+      <option value="14">Tip 14</option>
+      <option value="15">Tip 15</option>
+      <option value="16">Tip 16</option>
+      <option value="17">Tip 17</option>
+      <option value="18">Tip 18</option>
+      <option value="19">Tip 19</option>
+      <option value="20">Tip 20</option>
     </select>
 
     <label for="suprafataUtila">Suprafață utilă (m²):</label>
@@ -143,7 +168,9 @@
       <button class="export-btn" onclick="genereazaPDF()">Exportă ca PDF</button>
     </div>
 
-    <div class="result" id="pretTotal">Preț total: —</div>
+    <div class="result highlight" id="pretTotal">Preț total: —</div>
+
+    <div class="result" id="rezumatCalcul"></div>
   </div>
 
   <script>
@@ -196,6 +223,17 @@
 
       document.getElementById("pretTotal").innerText =
         `Preț total: ${Math.round(pretCuTVA).toLocaleString("ro-RO")} €`;
+
+      document.getElementById("rezumatCalcul").innerHTML = `
+        <strong>Rezumat calcul:</strong><br/>
+        Suprafață utilă: ${util} m²<br/>
+        Suprafață balcon: ${balcon} m²<br/>
+        Preț/mp util: ${pretMp2} €<br/>
+        Preț/mp balcon: ${Math.round(pretMp2 / 2)} €<br/>
+        Preț fără TVA: ${Math.round(pretFaraTVA).toLocaleString("ro-RO")} €<br/>
+        TVA aplicat: ${Math.round(tva * 100)}%<br/>
+        <strong>Preț final cu TVA: ${Math.round(pretCuTVA).toLocaleString("ro-RO")} €</strong>
+      `;
     }
 
     function genereazaPDF() {
@@ -210,7 +248,7 @@
       doc.text("Calculator Preț Apartament", 20, 20);
       doc.text(`Suprafață utilă: ${util} m²`, 20, 40);
       doc.text(`Balcon: ${balcon} m²`, 20, 50);
-      doc.text(`Preț pe m² (fără TVA): ${pretMp2} €`, 20, 60);
+      doc.text(`Preț pe m²: ${pretMp2} €`, 20, 60);
       doc.text(`TVA: ${Math.round(tva * 100)}%`, 20, 70);
       doc.text(total, 20, 90);
 
