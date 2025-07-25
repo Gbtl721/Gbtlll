@@ -34,6 +34,8 @@
     }
     label {
       font-weight: 600;
+      display: block;
+      margin-top: 15px;
     }
     input[type="number"] {
       width: 100%;
@@ -42,6 +44,21 @@
       border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 16px;
+    }
+    .tva-buttons button {
+      padding: 8px 16px;
+      margin: 10px 10px 20px 0;
+      font-size: 16px;
+      border: 2px solid #007acc;
+      background: white;
+      color: #007acc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+    .tva-buttons button.active {
+      background: #007acc;
+      color: white;
     }
     button {
       display: inline-block;
@@ -71,7 +88,7 @@
 <body>
   <div class="container">
 
-    <!-- LOGO OFICIAL -->
+    <!-- LOGO -->
     <div class="logo-container">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1uIbSuyHpv0zM3e3Baap6X_vDU9dGRLnCNg&s"
            alt="Grand Beetle Residence Logo">
@@ -88,8 +105,11 @@
     <label for="mp_balcon">Suprafață balcon (mp):</label>
     <input type="number" id="mp_balcon" value="14.33" step="0.01">
 
-    <label for="tva">TVA (%)</label>
-    <input type="number" id="tva" value="19" step="1">
+    <label>TVA (%)</label>
+    <div class="tva-buttons">
+      <button onclick="selecteazaTVA(9)" id="btn9">9%</button>
+      <button onclick="selecteazaTVA(21)" id="btn21">21%</button>
+    </div>
 
     <button onclick="calculeaza()">Calculează</button>
     <button onclick="exportaPDF()">Exportă ca PDF</button>
@@ -98,11 +118,22 @@
   </div>
 
   <script>
+    let tvaSelectat = 9; // valoare implicită
+
+    function selecteazaTVA(valoare) {
+      tvaSelectat = valoare;
+
+      // evidențiază butonul activ
+      document.getElementById("btn9").classList.remove("active");
+      document.getElementById("btn21").classList.remove("active");
+      document.getElementById("btn" + valoare).classList.add("active");
+    }
+
     function calculeaza() {
       const mpUtil = parseFloat(document.getElementById("mp_util").value);
       const pretUtil = parseFloat(document.getElementById("pret_util").value);
       const mpBalcon = parseFloat(document.getElementById("mp_balcon").value);
-      const tvaProcent = parseFloat(document.getElementById("tva").value) / 100;
+      const tvaProcent = tvaSelectat / 100;
 
       const pretBalcon = pretUtil / 2;
       const totalFaraTVA = (mpUtil * pretUtil) + (mpBalcon * pretBalcon);
@@ -116,7 +147,7 @@
           <li><strong>Preț/mp util:</strong> €${Math.round(pretUtil).toLocaleString('ro-RO')}</li>
           <li><strong>Suprafață balcon:</strong> ${mpBalcon} mp</li>
           <li><strong>Preț/mp balcon:</strong> €${Math.round(pretBalcon).toLocaleString('ro-RO')} (calculat automat)</li>
-          <li><strong>TVA:</strong> ${(tvaProcent * 100).toFixed(0)}%</li>
+          <li><strong>TVA:</strong> ${tvaSelectat}%</li>
         </ul><hr>
         <ul>
           <li><strong>Preț total fără TVA:</strong> €${Math.round(totalFaraTVA).toLocaleString('ro-RO')}</li>
@@ -139,6 +170,9 @@
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
       }).save();
     }
+
+    // selectează TVA 9% implicit la încărcare
+    window.onload = () => selecteazaTVA(9);
   </script>
 </body>
 </html>
