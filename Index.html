@@ -55,14 +55,12 @@
 
     .tva-buttons {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       margin-top: 15px;
     }
 
     .tva-buttons button {
-      flex: 1;
       padding: 10px;
-      margin: 0 5px;
       font-size: 16px;
       background-color: #eee;
       border: 1px solid #bbb;
@@ -159,8 +157,7 @@
     <input type="number" id="pretMp2" value="1300" onchange="calculeazaPret()" />
 
     <div class="tva-buttons">
-      <button onclick="setTVA(0.09)">TVA 9%</button>
-      <button onclick="setTVA(0.21)">TVA 21%</button>
+      <button onclick="setTVA(0.21)">TVA 21% (implicit)</button>
     </div>
 
     <div class="actions">
@@ -174,7 +171,7 @@
   </div>
 
   <script>
-    let tva = 0.09;
+    let tva = 0.21;
 
     const apartamente = {
       1: { util: 37.97, balcon: 4.56 },
@@ -239,18 +236,46 @@
     function genereazaPDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
+
       const util = document.getElementById("suprafataUtila").value;
       const balcon = document.getElementById("balcon").value;
       const pretMp2 = document.getElementById("pretMp2").value;
-      const total = document.getElementById("pretTotal").innerText;
+      const pretBalcon = Math.round(pretMp2 / 2);
+      const pretFaraTVA = (util * pretMp2) + (balcon * pretBalcon);
+      const pretCuTVA = pretFaraTVA * (1 + tva);
+      const totalFinal = Math.round(pretCuTVA).toLocaleString("ro-RO");
+
+      doc.setFontSize(16);
+      doc.text("Calculator Preț Apartament", 105, 20, null, null, 'center');
+      doc.setLineWidth(0.5);
+      doc.line(20, 25, 190, 25);
+
+      doc.setFontSize(12);
+      let y = 35;
+      const spacing = 10;
+
+      const randuri = [
+        [`Suprafață utilă:`, `${util} m²`],
+        [`Suprafață balcon:`, `${balcon} m²`],
+        [`Preț/mp util:`, `${pretMp2} €`],
+        [`Preț/mp balcon:`, `${pretBalcon} €`],
+        [`Preț fără TVA:`, `${Math.round(pretFaraTVA).toLocaleString("ro-RO")} €`],
+        [`TVA aplicat:`, `${Math.round(tva * 100)}%`]
+      ];
+
+      randuri.forEach(([eticheta, valoare]) => {
+        doc.text(eticheta, 25, y);
+        doc.text(valoare, 120, y);
+        y += spacing;
+      });
+
+      doc.line(20, y, 190, y);
+      y += spacing;
 
       doc.setFontSize(14);
-      doc.text("Calculator Preț Apartament", 20, 20);
-      doc.text(`Suprafață utilă: ${util} m²`, 20, 40);
-      doc.text(`Balcon: ${balcon} m²`, 20, 50);
-      doc.text(`Preț pe m²: ${pretMp2} €`, 20, 60);
-      doc.text(`TVA: ${Math.round(tva * 100)}%`, 20, 70);
-      doc.text(total, 20, 90);
+      doc.setFont(undefined, 'bold');
+      doc.text("Preț final cu TVA:", 25, y);
+      doc.text(`${totalFinal} €`, 120, y);
 
       doc.save("calcul_apartament.pdf");
     }
