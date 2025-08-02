@@ -17,11 +17,13 @@
 
     .container {
       max-width: 400px;
-      width: 100%;
+      width: 95%;
       background: #fff;
       padding: 20px;
       border-radius: 10px;
+      box-sizing: border-box;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin: 0 auto;
     }
 
     .logo {
@@ -58,28 +60,27 @@
       cursor: pointer;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
+    /* Stil pentru câmpurile numerice */
+    input[type="number"] {
+      font-size: 16px;
+      padding: 10px 12px;
       margin-top: 5px;
       margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 5px;
-      font-size: 16px;
-      appearance: auto;
-      background: white;
-      cursor: text;
     }
 
-    /* Pentru mobil mai mic */
-    @media(max-width: 480px) {
+    /* Ajustări pentru mobil */
+    @media (max-width: 480px) {
       select {
-        font-size: 20px;
+        font-size: 18px;
         padding: 14px 40px 14px 14px;
       }
-      input {
-        font-size: 18px;
-        padding: 14px;
+      input[type="number"] {
+        font-size: 16px;
+        padding: 12px 14px;
       }
     }
 
