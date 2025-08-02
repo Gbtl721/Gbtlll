@@ -42,13 +42,28 @@
       display: block;
     }
 
-    input, select {
+    select, input {
       width: 100%;
-      padding: 10px;
+      padding: 14px 12px; /* mărim padding-ul */
       margin-top: 5px;
       margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      font-size: 18px; /* text mai mare pentru mobil */
+      -webkit-appearance: none; /* elimină stilul nativ pt dropdown */
+      -moz-appearance: none;
+      appearance: none;
+      background: white url('data:image/svg+xml;utf8,<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
+      background-size: 16px 16px;
+      cursor: pointer;
+    }
+
+    /* Pentru mobile mai mic */
+    @media(max-width: 480px) {
+      select, input {
+        font-size: 20px;
+        padding: 16px 14px;
+      }
     }
 
     .actions {
@@ -218,7 +233,7 @@
       logo.onload = () => {
         doc.addImage(logo, "PNG", 10, 10, 30, 30);
 
-        doc.setFont("helvetica", "normal");
+        doc.setFont("times", "normal");
         doc.setFontSize(14);
         doc.text("Calculator Preț Apartament", 50, 20);
         doc.setFontSize(12);
@@ -238,7 +253,7 @@
         doc.text("Telefon: 0766495398", 150, 80);
         doc.text("Email: office@grandbeetle.ro", 150, 90);
 
-        doc.setFont("helvetica", "bold");
+        doc.setFont("times", "bold");
         doc.setFontSize(14);
         doc.text(total, 20, 135);
 
