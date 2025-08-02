@@ -42,15 +42,15 @@
       display: block;
     }
 
-    select, input {
+    select {
       width: 100%;
-      padding: 14px 12px; /* mărim padding-ul */
+      padding: 12px 40px 12px 12px; /* spațiu mai mare dreapta pentru săgeată */
       margin-top: 5px;
       margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
-      font-size: 18px; /* text mai mare pentru mobil */
-      -webkit-appearance: none; /* elimină stilul nativ pt dropdown */
+      font-size: 18px;
+      -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
       background: white url('data:image/svg+xml;utf8,<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
@@ -58,11 +58,28 @@
       cursor: pointer;
     }
 
-    /* Pentru mobile mai mic */
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      appearance: auto;
+      background: white;
+      cursor: text;
+    }
+
+    /* Pentru mobil mai mic */
     @media(max-width: 480px) {
-      select, input {
+      select {
         font-size: 20px;
-        padding: 16px 14px;
+        padding: 14px 40px 14px 14px;
+      }
+      input {
+        font-size: 18px;
+        padding: 14px;
       }
     }
 
