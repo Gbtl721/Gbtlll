@@ -2,7 +2,7 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calculator Apartamente Grand Beetle</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -93,14 +93,37 @@
 </head>
 <body>
   <div class="container">
-    <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1uIbSuyHpv0zM3e3Baap6X_vDU9dGRLnCNg&s" alt="Logo" />
+    <img
+      class="logo"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1uIbSuyHpv0zM3e3Baap6X_vDU9dGRLnCNg&s"
+      alt="Logo"
+    />
 
     <h1>Calculator Preț Apartament</h1>
 
     <label for="tip-apartament">Tip apartament:</label>
     <select id="tip-apartament" onchange="selectApartmentType()">
       <option value="">— Selectează —</option>
-      ${[...Array(20)].map((_, i) => `<option value="${i + 1}">Tip ${i + 1}</option>`).join('')}
+      <option value="1">Tip 1</option>
+      <option value="2">Tip 2</option>
+      <option value="3">Tip 3</option>
+      <option value="4">Tip 4</option>
+      <option value="5">Tip 5</option>
+      <option value="6">Tip 6</option>
+      <option value="7">Tip 7</option>
+      <option value="8">Tip 8</option>
+      <option value="9">Tip 9</option>
+      <option value="10">Tip 10</option>
+      <option value="11">Tip 11</option>
+      <option value="12">Tip 12</option>
+      <option value="13">Tip 13</option>
+      <option value="14">Tip 14</option>
+      <option value="15">Tip 15</option>
+      <option value="16">Tip 16</option>
+      <option value="17">Tip 17</option>
+      <option value="18">Tip 18</option>
+      <option value="19">Tip 19</option>
+      <option value="20">Tip 20</option>
     </select>
 
     <label for="suprafataUtila">Suprafață utilă (m²):</label>
@@ -206,6 +229,16 @@
         doc.text(`Balcon: ${balcon} m²`, 20, 95);
         doc.text(`Preț pe m²: ${pretMp2} €`, 20, 105);
         doc.text(`TVA: 21%`, 20, 115);
+
+        // Date de contact reale
+        doc.setFontSize(12);
+        doc.text("Date contact:", 150, 50);
+        doc.text("Grand Beetle Residence", 150, 60);
+        doc.text("Str. Aurel Vlaicu 78", 150, 70);
+        doc.text("Telefon: 0766495398", 150, 80);
+        doc.text("Email: office@grandbeetle.ro", 150, 90);
+
+        doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
         doc.text(total, 20, 135);
 
