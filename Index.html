@@ -125,26 +125,7 @@
     <label for="tip-apartament">Tip apartament:</label>
     <select id="tip-apartament" onchange="selectApartmentType()">
       <option value="">— Selectează —</option>
-      <option value="1">Tip 1</option>
-      <option value="2">Tip 2</option>
-      <option value="3">Tip 3</option>
-      <option value="4">Tip 4</option>
-      <option value="5">Tip 5</option>
-      <option value="6">Tip 6</option>
-      <option value="7">Tip 7</option>
-      <option value="8">Tip 8</option>
-      <option value="9">Tip 9</option>
-      <option value="10">Tip 10</option>
-      <option value="11">Tip 11</option>
-      <option value="12">Tip 12</option>
-      <option value="13">Tip 13</option>
-      <option value="14">Tip 14</option>
-      <option value="15">Tip 15</option>
-      <option value="16">Tip 16</option>
-      <option value="17">Tip 17</option>
-      <option value="18">Tip 18</option>
-      <option value="19">Tip 19</option>
-      <option value="20">Tip 20</option>
+      ${[...Array(20)].map((_, i) => `<option value="${i + 1}">Tip ${i + 1}</option>`).join('')}
     </select>
 
     <label for="suprafataUtila">Suprafață utilă (m²):</label>
@@ -235,7 +216,7 @@
 
     function genereazaPDF() {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
       const util = document.getElementById("suprafataUtila").value;
       const balcon = document.getElementById("balcon").value;
@@ -245,16 +226,38 @@
       const pretCuTVA = pretFaraTVA * (1 + tva);
       const totalFinal = Math.round(pretCuTVA).toLocaleString("ro-RO");
 
-      doc.setFontSize(16);
-      doc.text("Calculator Preț Apartament", 105, 20, null, null, 'center');
-      doc.setLineWidth(0.5);
-      doc.line(20, 25, 190, 25);
+      const tip = document.getElementById("tip-apartament").value;
+      const tipLabel = tip ? `Tip ${tip}` : "—";
 
-      doc.setFontSize(12);
-      let y = 35;
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("ro-RO");
+      const timeStr = now.toLocaleTimeString("ro-RO", { hour: '2-digit', minute: '2-digit' });
+      const zi = String(now.getDate()).padStart(2, '0');
+      const luna = String(now.getMonth() + 1).padStart(2, '0');
+      const an = now.getFullYear();
+      const ora = String(now.getHours()).padStart(2, '0');
+      const minut = String(now.getMinutes()).padStart(2, '0');
+      const codUnic = `APT-${tip || "XX"}-${an}${luna}${zi}-${ora}${minut}`;
+
       const spacing = 10;
+      let y = 30;
+
+      const logoBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAG1BMVEVHcEyZmZna2trW1tbd3d3T09Pb29vc3Nzq6uq5ubkRnaAhAAABGUlEQVR42u3VsQmAMAwDwTru/5PWpx8FswEp2CHfZx0dO5PQM9lNzpN0WYJcRQiKIoihKIoiiKIoSiKIoiiKIoSiKIoiiKIoSiKIoiiKIougv4BP3LJ4B+2A4MQAAAABJRU5ErkJggg==";
+
+      doc.addImage(logoBase64, "PNG", 10, 10, 25, 25);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(18);
+      doc.text("Calculator Preț Apartament", 148.5, 20, null, null, 'center');
+
+      doc.setFontSize(10);
+      doc.text(`Generat la: ${dateStr} ${timeStr}`, 287, 15, { align: "right" });
+
+      y += spacing;
 
       const randuri = [
+        [`Tip apartament:`, tipLabel],
+        [`Cod identificare:`, codUnic],
         [`Suprafață utilă:`, `${util} m²`],
         [`Suprafață balcon:`, `${balcon} m²`],
         [`Preț/mp util:`, `${pretMp2} €`],
@@ -263,19 +266,20 @@
         [`TVA aplicat:`, `${Math.round(tva * 100)}%`]
       ];
 
-      randuri.forEach(([eticheta, valoare]) => {
-        doc.text(eticheta, 25, y);
-        doc.text(valoare, 120, y);
+      doc.setFontSize(12);
+      randuri.forEach(([label, val]) => {
+        doc.text(label, 40, y);
+        doc.text(val, 140, y);
         y += spacing;
       });
 
-      doc.line(20, y, 190, y);
+      doc.line(20, y, 277, y);
       y += spacing;
 
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
-      doc.text("Preț final cu TVA:", 25, y);
-      doc.text(`${totalFinal} €`, 120, y);
+      doc.text("Preț final cu TVA:", 40, y);
+      doc.text(`${totalFinal} €`, 140, y);
 
       doc.save("calcul_apartament.pdf");
     }
